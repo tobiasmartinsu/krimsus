@@ -1,0 +1,205 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\JenisPelaporan;
+use Illuminate\Http\Request;
+use App\Models\Pelaporan;
+use App\Models\Unit;
+use File;
+Use Alert;
+
+
+class PelaporanController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        $pelaporan = Pelaporan::where("unit_id", "1")->get();
+        $jenis_pelaporan = JenisPelaporan::all();
+
+        
+
+        return view('pelaporan.unit1.tampil', ['pelaporan' => $pelaporan, 'jenis_pelaporan' => $jenis_pelaporan]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $unit = Unit::where("id", "1")->get();
+        $jenis_pelaporan = JenisPelaporan::all();
+        return view('pelaporan.unit1.tambah', ['units' => $unit, 'jenis_pelaporan' => $jenis_pelaporan]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        $request->validate([
+            'unit_id' => 'required',
+            'nama_aduan' => 'required',
+            'id_jenis_laporan' => 'required',
+            'laporan_polisi' => 'required',
+            'pelapor' => 'required',
+            'terlapor' => 'required',
+            'tanggal' => 'required',
+            'uraian' => 'required',
+            'file_aduan' => 'required|mimes:pdf,docx',
+        ],
+        [
+            'nama_aduan.required' => 'Nama Aduan harus diisi!',
+            'id_jenis_laporan.required' => 'Jenis Laporan harus diisi!',
+            'laporan_polisi.required' => 'Laporan Polisi harus diisi!',
+            'pelapor.required' => 'Pelapor harus diisi!',
+            'terlapor.required' => 'Terlapor harus diisi!',
+            'tanggal.required' => 'Tanggal harus diisi!',
+            'uraian.required' => 'Uraian harus diisi!',
+            'file_aduan.required' => 'File harus berbentuk .pdf atau .docx'
+        ]);
+
+        $fileName = time() . '.' . $request->file_aduan->extension();
+
+        $request->file_aduan->move(public_path('filepelaporan'), $fileName);
+
+        Pelaporan::create([
+            'unit_id' => $request['unit_id'],
+            'nama_aduan' => $request['nama_aduan'],
+            'laporan_polisi' => $request['laporan_polisi'],
+            'pelapor' => $request['pelapor'],
+            'terlapor' => $request['terlapor'],
+            'tanggal' => $request['tanggal'],
+            'uraian' => $request['uraian'],
+            'file_aduan' => $fileName,
+            'id_jenis_laporan' => $request['id_jenis_laporan'],
+
+
+        ]);
+
+
+        Alert::success('Berhasil', 'Data Berhasil ditambahkan');
+        return redirect('/pelaporan');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //  $pelaporan = Pelaporan::find($id);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $pelaporan = Pelaporan::find($id);
+        $unit = Unit::all();
+        $jenis_pelaporan = JenisPelaporan::all();
+
+        return view('pelaporan.unit1.edit', ['pelaporan' => $pelaporan, 'units' => $unit, 'jenis_pelaporan' => $jenis_pelaporan]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'unit_id' => 'required',
+            'nama_aduan' => 'required',
+            'id_jenis_laporan' => 'required',
+            'laporan_polisi' => 'required',
+            'pelapor' => 'required',
+            'terlapor' => 'required',
+            'tanggal' => 'required',
+            'uraian' => 'required',
+            'file_aduan' => 'mimes:pdf,docx',
+        ],
+        [
+            'nama_aduan.required' => 'Nama Aduan harus diisi!',
+            'id_jenis_laporan.required' => 'Jenis Laporan harus diisi!',
+            'laporan_polisi.required' => 'Laporan Polisi harus diisi!',
+            'pelapor.required' => 'Pelapor harus diisi!',
+            'terlapor.required' => 'Terlapor harus diisi!',
+            'tanggal.required' => 'Tanggal harus diisi!',
+            'uraian.required' => 'Uraian harus diisi!',
+            'file_aduan.required' => 'File harus berbentuk .pdf atau .docx'
+        ]);
+
+        
+
+        $pelaporan = Pelaporan::find($id);
+
+        if ($request->has('file_aduan')) {
+            $path = 'filepelaporan/';
+            File::delete($path . $pelaporan->file_aduan);
+
+            $namaFile = time() . '.' . $request->file_aduan->extension();
+
+            $request->file_aduan->move(public_path('filepelaporan'), $namaFile);
+
+            $pelaporan->file_aduan = $namaFile;
+
+            $pelaporan->save();
+        }
+
+        $pelaporan->unit_id = $request->unit_id;
+        $pelaporan->nama_aduan = $request->nama_aduan;
+        $pelaporan->id_jenis_laporan = $request->id_jenis_laporan;
+        $pelaporan->laporan_polisi = $request->laporan_polisi;
+        $pelaporan->pelapor = $request->pelapor;
+        $pelaporan->terlapor = $request->terlapor;
+        $pelaporan->tanggal = $request->tanggal;
+        $pelaporan->uraian = $request->uraian;
+
+        $pelaporan->save();
+        Alert::success('Berhasil', 'Data Berhasil diedit');
+        return redirect('/pelaporan');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $pelaporan = Pelaporan::find($id);
+
+
+        $path = 'filepelaporan/';
+
+        File::delete($path . $pelaporan->file_aduan);
+
+        $pelaporan->delete();
+
+
+        return redirect('/pelaporan');
+    }
+}
