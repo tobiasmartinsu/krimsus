@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Prestasi;
 use App\Models\Unit;
 use File;
+use Alert;
 
 
 class PrestasiController extends Controller
@@ -73,6 +74,7 @@ class PrestasiController extends Controller
             'detail' => $request['detail'],
             'foto_prestasi' => $imageName,
         ]);
+        Alert::success('Berhasil', 'Data Berhasil ditambahkan');
         return redirect('/prestasi');
 
     }
@@ -151,7 +153,7 @@ class PrestasiController extends Controller
         $prestasi->detail = $request->detail;
 
         $prestasi->save();
-
+        Alert::success('Berhasil', 'Data Berhasil diedit');
         return redirect('/prestasi');
     }
 

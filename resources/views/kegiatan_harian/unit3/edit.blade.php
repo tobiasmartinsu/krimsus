@@ -61,7 +61,7 @@
             @enderror
         </div>
         <div class="form-group">
-            <label>Upload File</label>
+            <label>Upload File (.jpg atau .png)</label>
             <input type="file" class="form-control text-dark" name="bukti_kegiatan">
             @error('bukti_kegiatan')
                 <div class="alert alert-danger">
@@ -101,7 +101,7 @@
                         );
 
                     $.each(result, function(key, value) {
-                        $('select[name="name"]').append('<option value="' + value.id + '">' +
+                        $('select[name="name"]').append('<option value="' + value.name + '">' +
                             value.name + '</option>');
                     console.log(value)
                     });

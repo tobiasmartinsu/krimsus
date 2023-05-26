@@ -125,7 +125,7 @@ Halaman Tambah Pelaporan
             </div>
 
             <div class="row my-3">
-                <label class="col-sm-2 col-form-label">Upload File</label>
+                <label class="col-sm-2 col-form-label">Upload File (.pdf atau .docx)</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control" name="file_aduan">
                     @error('file_aduan')
