@@ -1,6 +1,6 @@
 @extends('layout.krimsus')
 @section('title')
-    Halaman Detail Prestasi Anggota
+Halaman Detail Prestasi Anggota
 @endsection
 @section('content')
 
@@ -11,7 +11,9 @@
     <img class="card-img-top my-3" src="{{asset('fileprestasi/' . $prestasi->foto_prestasi)}}" alt="" height="500 px">
     <div class="card-body">
 
-        <h3 class="text-primary">{{$prestasi->judul_prestasi}} </h3>
+        <h3>{{$prestasi->judul_prestasi}} </h3>
+        <h5>Oleh</h5>
+        <h5>{{$prestasi->name}}</h5><br>
         <p>{{$prestasi->detail}}</p>
     </div>
 

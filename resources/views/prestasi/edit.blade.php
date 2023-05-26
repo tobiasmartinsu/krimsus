@@ -101,7 +101,7 @@
                         );
 
                     $.each(result, function(key, value) {
-                        $('select[name="name"]').append('<option value="' + value.id + '">' +
+                        $('select[name="name"]').append('<option value="' + value.name + '">' +
                             value.name + '</option>');
                     console.log(value)
                     });

@@ -84,13 +84,14 @@
         unit.addEventListener('change', () => {
             console.log(unit.value);
             $.ajax({
-                url: '/prestasi/getUnitNama/' + unit.value,
+                url: '/kegiatanharian/getUnitNama/' + unit.value,
                 type: 'GET',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: 'json',
                 success: function(result) {
+                    // console.log("result")
                     console.log(result)
                     // name.value = result.name;
 
@@ -100,8 +101,9 @@
                         );
 
                     $.each(result, function(key, value) {
-                        $('select[name="name"]').append('<option value="' + value.id + '">' +
+                        $('select[name="name"]').append('<option value="' + value.name + '">' +
                             value.name + '</option>');
+                    console.log("value")
                     console.log(value)
                     });
                 }

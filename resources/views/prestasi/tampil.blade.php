@@ -12,8 +12,11 @@ Halaman Prestasi Anggota
     <div class="col-4">
         <div class="card">
             <img class="card-img-top" src="{{asset('fileprestasi/' . $item->foto_prestasi)}}" style="height: 400px" alt="">
-            <div class="card-body" style="height: 300px">
-                <h3>{{$item->judul_prestasi}}</h3>
+            <div class="card-body" style="height:max-content">
+                <h3 class="mt-2">{{$item->judul_prestasi}}</h3>
+                <h5>Oleh</h5>
+                <h5>{{$item->name}}</h5> 
+                <br>
                 <p class="card-text">{{ Str::limit($item->detail,200) }}</p>
                 <a href="/prestasi/{{$item->id}} " class="btn btn-outline-primary w-100">Lihat Lebih Lengkap</a>
                 <div class="row mt-3">
